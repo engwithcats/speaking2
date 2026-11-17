@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fairytopia Questions</title>
+  <meta name="description" content="Игра для подготовки к ЕГЭ по английскому (говорение, Task 2): учимся задавать вопросы.">
+  <link rel="icon" href="assets/mascot.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+    <div class="sparkles" id="sparkles"></div>
+  </div>
+
+  <main id="app">
+
+    <!-- ============ HOME ============ -->
+    <section class="screen active" id="screen-home">
+      <header class="hero">
+        <h1 class="title"><span class="holo-text">Fairytopia</span> <span class="title-sub">Questions</span></h1>
+        <p class="tagline">ЕГЭ · Говорение · Task 2 — учимся задавать вопросы</p>
+      </header>
+
+      <div class="intro">
+        <div class="mascot-wrap">
+          <img class="mascot float" src="assets/mascot.webp" alt="Кошечка-фея с волшебной палочкой">
+        </div>
+        <div class="bubble">
+          <p class="bubble-hi">Hi! I'm Fairy Kitty ✨</p>
+          <p class="task">You are considering visiting <b>Fairytopia</b> and now you’d like to get more information.</p>
+          <p class="task-ru">Выбери режим и научись задавать вопросы о чём угодно!</p>
+        </div>
+      </div>
+
+      <figure class="ad-card pearl">
+        <div class="ad-badge">Advertisement</div>
+        <img src="assets/fairytopia.jpg" alt="Фейритопия: феи летят над цветочной долиной">
+        <figcaption>
+          <b>Visit Fairytopia!</b> Magic flowers, flying lessons & rainbow pollen for everyone.
+        </figcaption>
+      </figure>
+
+      <h2 class="section-title">Выбери режим</h2>
+      <div class="modes">
+        <button class="mode-card m-pink" data-go="flash">
+          <span class="mode-icon">🃏</span>
+          <span class="mode-name">Flashcards</span>
+          <span class="mode-desc">Выучи шаблоны для всех вопросов из говорения</span>
+        </button>
+        <button class="mode-card m-sky" data-go="mix">
+          <span class="mode-icon">🧩</span>
+          <span class="mode-name">Mix &amp; Match</span>
+          <span class="mode-desc">Собери вопрос из перепутанных слов</span>
+        </button>
+        <button class="mode-card m-mint" data-go="test">
+          <span class="mode-icon">🎤</span>
+          <span class="mode-name">Test yourself</span>
+          <span class="mode-desc">Задай вопрос устно и проверь себя</span>
+        </button>
+        <button class="mode-card m-lilac" data-go="fight">
+          <span class="mode-icon">⚔️</span>
+          <span class="mode-name">Fight</span>
+          <span class="mode-desc">Дуэль с другом по PIN-коду: 30 вопросов</span>
+        </button>
+      </div>
+      <p class="footer-note">Материал: банк ФИПИ, Решу ЕГЭ, Speaking Book, сборник 2027 · шаблоны по конспекту «Говорение 2»</p>
+    </section>
+
+    <!-- ============ FLASHCARDS ============ -->
+    <section class="screen" id="screen-flash">
+      <div class="topbar">
+        <button class="btn-back" data-go="home">← Меню</button>
+        <div class="topbar-title">Flashcards</div>
+        <div class="counter" id="flash-counter">1 / 1</div>
+      </div>
+      <div class="progress"><div class="progress-fill" id="flash-progress"></div></div>
+
+      <div class="flash-area" id="flash-area">
+        <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Перевернуть карточку">
+          <div class="flash-inner">
+            <div class="flash-face flash-front holo-border">
+              <div class="face-label">Категория</div>
+              <div class="flash-cat" id="flash-front"></div>
+              <div class="flash-hint">Нажми, чтобы перевернуть ↻</div>
+            </div>
+            <div class="flash-face flash-back holo-border">
+              <div class="face-label" id="flash-back-label"></div>
+              <div class="flash-list" id="flash-back"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-ghost" id="flash-prev">← Назад</button>
+        <button class="btn btn-ghost" id="flash-flip">Перевернуть</button>
+        <button class="btn btn-main" id="flash-next">Далее →</button>
+      </div>
+    </section>
+
+    <!-- ============ MIX & MATCH ============ -->
+    <section class="screen" id="screen-mix">
+      <div class="topbar">
+        <button class="btn-back" data-go="home">← Меню</button>
+        <div class="topbar-title">Mix &amp; Match</div>
+        <div class="counter" id="mix-counter"></div>
+      </div>
+
+      <div class="panel pearl" id="mix-setup">
+        <img class="mascot-sm" src="assets/mascot.webp" alt="">
+        <h2>Собери вопрос!</h2>
+        <p>Перетаскивай кубики со словами (или просто нажимай на них), чтобы получился правильный вопрос к пункту объявления.</p>
+        <p class="muted">Сколько вопросов в раунде?</p>
+        <div class="choice-row">
+          <button class="btn btn-main" data-mix-count="10">10</button>
+          <button class="btn btn-main" data-mix-count="20">20</button>
+          <button class="btn btn-main" data-mix-count="all">Все</button>
+        </div>
+      </div>
+
+      <div id="mix-play" hidden>
+        <div class="progress"><div class="progress-fill" id="mix-progress"></div></div>
+        <div id="mix-game"></div>
+        <div class="controls">
+          <button class="btn btn-ghost" id="mix-reset">Сбросить</button>
+          <button class="btn btn-ghost" id="mix-show">Показать ответ</button>
+          <button class="btn btn-main" id="mix-check">Проверить</button>
+          <button class="btn btn-main" id="mix-next" hidden>Далее →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TEST YOURSELF ============ -->
+    <section class="screen" id="screen-test">
+      <div class="topbar">
+        <button class="btn-back" data-go="home">← Меню</button>
+        <div class="topbar-title">Test yourself</div>
+        <div class="counter" id="test-counter"></div>
+      </div>
+
+      <div class="test-card pearl holo-border">
+        <div class="face-label">Ask about:</div>
+        <div class="test-point" id="test-point"></div>
+        <p class="muted test-hint">Задай вопрос вслух, а потом проверь себя 🎤</p>
+        <div class="test-answer" id="test-answer" hidden></div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-ghost" id="test-show">Показать ответ</button>
+        <button class="btn btn-main" id="test-next">Далее →</button>
+      </div>
+      <p class="muted center">Помни: в первом вопросе называй место (Where is <i>the shop</i> located?), не используй «they» и «What about…?».</p>
+    </section>
+
+    <!-- ============ FIGHT ============ -->
+    <section class="screen" id="screen-fight">
+      <div class="topbar">
+        <button class="btn-back" id="fight-leave">← Меню</button>
+        <div class="topbar-title">Fight</div>
+        <div class="counter" id="fight-counter"></div>
+      </div>
+
+      <!-- lobby -->
+      <div class="panel pearl" id="fight-lobby">
+        <img class="mascot-sm" src="assets/mascot.webp" alt="">
+        <h2>Fairy Duel ⚔️</h2>
+        <p>Вызови друга на дуэль: 30 вопросов Mix &amp; Match. Побеждает тот, кто соберёт больше правильных вопросов (при равенстве — кто быстрее).</p>
+        <label class="field">
+          <span>Твоё имя</span>
+          <input id="fight-name" maxlength="16" placeholder="Например, Alina" autocomplete="off">
+        </label>
+        <div class="lobby-grid">
+          <div class="lobby-box">
+            <h3>Создать дуэль</h3>
+            <p class="muted">Получи PIN и отправь его другу</p>
+            <button class="btn btn-main" id="fight-create">Сгенерировать PIN</button>
+          </div>
+          <div class="lobby-box">
+            <h3>Присоединиться</h3>
+            <input id="fight-pin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="PIN друга" autocomplete="off">
+            <button class="btn btn-main" id="fight-join">Войти</button>
+          </div>
+        </div>
+        <p class="status" id="fight-status"></p>
+      </div>
+
+      <!-- waiting -->
+      <div class="panel pearl" id="fight-wait" hidden>
+        <h2>Твой PIN</h2>
+        <div class="pin-big holo-text" id="fight-pin-show">------</div>
+        <p>Скажи этот PIN другу. Как только он его введёт — дуэль начнётся!</p>
+        <div class="loader"><span></span><span></span><span></span></div>
+        <button class="btn btn-ghost" id="fight-cancel">Отмена</button>
+      </div>
+
+      <!-- countdown -->
+      <div class="panel pearl center" id="fight-count" hidden>
+        <p class="vs" id="fight-vs"></p>
+        <div class="countdown holo-text" id="fight-countdown">3</div>
+      </div>
+
+      <!-- play -->
+      <div id="fight-play" hidden>
+        <div class="duel-bars">
+          <div class="duel-row"><span class="duel-name" id="duel-me-name">Ты</span><div class="progress"><div class="progress-fill" id="duel-me"></div></div><span class="duel-score" id="duel-me-score">0</span></div>
+          <div class="duel-row opp"><span class="duel-name" id="duel-op-name">Соперник</span><div class="progress"><div class="progress-fill" id="duel-op"></div></div><span class="duel-score" id="duel-op-score">0</span></div>
+        </div>
+        <div id="fight-game"></div>
+        <div class="controls">
+          <button class="btn btn-ghost" id="fight-reset">Сбросить</button>
+          <button class="btn btn-main" id="fight-check">Ответить</button>
+        </div>
+      </div>
+
+      <!-- waiting for opponent to finish -->
+      <div class="panel pearl center" id="fight-waitend" hidden>
+        <h2>Готово! ✨</h2>
+        <p id="fight-mine"></p>
+        <p>Ждём, пока соперник закончит…</p>
+        <div class="loader"><span></span><span></span><span></span></div>
+      </div>
+
+      <!-- result -->
+      <div class="panel pearl center" id="fight-result" hidden>
+        <img class="mascot-sm float" src="assets/mascot.webp" alt="">
+        <h2 id="fight-winner" class="holo-text big"></h2>
+        <table class="score-table" id="fight-table"></table>
+        <div class="choice-row">
+          <button class="btn btn-main" id="fight-again">Новая дуэль</button>
+          <button class="btn btn-ghost" data-go="home">Другой режим</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ END (shared) ============ -->
+    <section class="screen" id="screen-end">
+      <div class="panel pearl center">
+        <img class="mascot-sm float" src="assets/mascot.webp" alt="">
+        <h2 class="holo-text big" id="end-title">Well done!</h2>
+        <p id="end-text"></p>
+        <div class="choice-row">
+          <button class="btn btn-main" id="end-again">Начать сначала</button>
+          <button class="btn btn-ghost" data-go="home">Выбрать другой режим</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/templates.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
