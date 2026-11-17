@@ -41,7 +41,7 @@
   }
 
   function confetti(n = 40) {
-    const items = ["✨", "🦋", "🌸", "⭐", "💖", "🌈", "💎"];
+    const items = ["✨", "🦋", "💜", "🌟", "💫", "🪄"];
     for (let i = 0; i < n; i++) {
       const el = document.createElement("div");
       el.className = "confetti";
@@ -398,6 +398,171 @@
   $("#test-next").addEventListener("click", () => { Test.i++; Test.n++; testRender(); });
 
   /* ======================================================
+     QUIZ — выбери правильный вопрос среди вариантов с ошибками
+     ====================================================== */
+  const AUX = ["is", "are", "does", "do", "can", "will", "should"];
+  const SWAP = { is: "are", are: "is", does: "do", do: "does" };
+  const WRONG_AUX = { is: "does", are: "do", does: "is", do: "are" };
+  const PRED = /^(\w+ed|taught|held|sold|made|done|available|free|possible|safe|open|necessary|qualified|vaccinated|located|situated)$/i;
+  const KEEP_CASE = /^(I|Wi-Fi|Internet|London|Russian|PE|TV)$/;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const low = w => (KEEP_CASE.test(w) ? w : w.charAt(0).toLowerCase() + w.slice(1));
+  const toQ = words => cap(words.join(" ")) + "?";
+
+  // где кончается подлежащее (куда ученик по ошибке ставит глагол): I / there / the shop / the school's car …
+  function subjectEnd(rest) {
+    const l = rest.map(x => x.toLowerCase());
+    if (["there", "i", "you", "it", "we", "they"].includes(l[0])) return 1;
+    const p = rest.findIndex((x, i) => i > 0 && PRED.test(x));
+    if (p > 0) return p;
+    if (["the", "a", "an", "your", "my"].includes(l[0])) {
+      let i = 1;
+      while (i < rest.length - 1 && /'s$/.test(rest[i])) i++;
+      return Math.min(i + 1, rest.length);
+    }
+    return 1;
+  }
+
+  function makeDistractors(point, q) {
+    const w = q.replace(/\?$/, "").split(" ");
+    const lw = w.map(x => x.toLowerCase());
+    const ai = lw.findIndex(x => AUX.includes(x));
+    const aux = ai >= 0 ? lw[ai] : null;
+    const cands = [];
+    const add = (words, why, prio) => {
+      const text = Array.isArray(words) ? toQ(words) : words;
+      if (text && text !== q && !cands.some(c => c.text === text)) cands.push({ text, why, prio: prio || 0 });
+    };
+
+    // 1) порядок слов
+    if (ai === 0) {
+      const rest = w.slice(1);
+      rest[0] = low(rest[0]);
+      if (aux === "do" || aux === "does") add(rest, "Порядок слов: это утверждение, а в вопросе нужен вспомогательный глагол do / does в начале", 2);
+      else {
+        const out = rest.slice();
+        out.splice(subjectEnd(rest), 0, aux);
+        add(out, "Порядок слов: в вопросе глагол (" + aux + ") стоит перед подлежащим", 2);
+      }
+    } else if (ai > 0) {
+      const wh = w.slice(0, ai), rest = w.slice(ai + 1);
+      if (aux === "do" || aux === "does") add([...wh, ...rest], "Пропущен вспомогательный глагол " + aux + " — без него получается не вопрос", 2);
+      else if (aux === "is" || aux === "are") {
+        const p = rest.findIndex((x, i) => i > 0 && PRED.test(x));
+        const out = p > 0 ? [...wh, ...rest.slice(0, p), w[ai], ...rest.slice(p)] : [...wh, ...rest, w[ai]];
+        add(out, "Порядок слов: после вопросительного слова сразу идёт " + aux + ", потом подлежащее", 2);
+      } else {
+        const out = rest.slice();
+        out.splice(subjectEnd(rest), 0, w[ai]);
+        add([...wh, ...out], "Порядок слов: после вопросительного слова сразу идёт " + aux + ", потом подлежащее", 2);
+      }
+    }
+    // 2) согласование is/are, do/does
+    if (aux && SWAP[aux] && !/staff| and /i.test(q)) {
+      const out = w.slice(); out[ai] = ai === 0 ? cap(SWAP[aux]) : SWAP[aux];
+      add(out, "Согласование: " + SWAP[aux] + " не подходит к подлежащему — нужно " + aux, 1);
+    }
+    // 3) не тот вспомогательный глагол
+    if (aux && WRONG_AUX[aux]) {
+      const out = w.slice(); out[ai] = ai === 0 ? cap(WRONG_AUX[aux]) : WRONG_AUX[aux];
+      add(out, "Не тот вспомогательный глагол: здесь нужен " + aux + ", а не " + WRONG_AUX[aux], 1);
+    }
+    // 4) пропущен артикль
+    const art = lw.findIndex((x, i) => i > 0 && (x === "the" || x === "a" || x === "an"));
+    if (art > 0) add(w.filter((x, i) => i !== art), "Пропущен артикль " + lw[art] + " — артикли не теряем", 1);
+    // 5) запрещённое What about …?
+    if (!/^(if|whether|how|what|when|whom|check)\b/i.test(point)) add("What about " + point + "?", "Так нельзя: What about …? — это не полный прямой вопрос", 0);
+    // 6) they вместо you
+    if (/\byou\b/i.test(q)) add(q.replace(/\byou\b/g, "they").replace(/\bYou\b/g, "They").replace(/\byour\b/g, "their"), "Не используем they: обращайся на you или называй место (the shop, the club…)", 0);
+    // 7) модальный глагол + to
+    if (aux === "can" || aux === "should" || aux === "will") {
+      const rest = w.slice(ai + 1);
+      const at = ai + 1 + subjectEnd(rest);
+      if (at < w.length) add([...w.slice(0, at), "to", ...w.slice(at)], "После " + aux + " глагол идёт без частицы to", 1);
+    }
+    // запасной вариант: лишний глагол
+    const at = /^(many|much|long|often|early|big|old)$/.test(lw[1]) ? 2 : 1;
+    if (!aux || SWAP[aux]) add([...w.slice(0, at), "is", ...w.slice(at)], "Лишний глагол is — в вопросе только один глагол-помощник", -1);
+    else add([...w.slice(0, at), "do", ...w.slice(at)], "Лишний глагол do — с " + aux + " он не нужен", -1);
+
+    const order = cands.filter(c => c.prio === 2);
+    const others = shuffle(cands.filter(c => c.prio >= 0 && c.prio < 2));
+    const spare = cands.filter(c => c.prio < 0);
+    return [...order, ...others, ...spare].slice(0, 3);
+  }
+  window.__makeDistractors = makeDistractors; // для проверки
+
+  const Quiz = { deck: [], i: 0, score: 0, answered: false };
+  starters.quiz = () => {
+    $("#quiz-setup").hidden = false;
+    $("#quiz-play").hidden = true;
+    $("#quiz-counter").textContent = "";
+  };
+  $$("[data-quiz-count]").forEach(b => b.addEventListener("click", () => {
+    const c = b.dataset.quizCount;
+    Quiz.deck = shuffle(window.QUESTIONS).slice(0, c === "all" ? window.QUESTIONS.length : +c);
+    Quiz.i = 0; Quiz.score = 0;
+    $("#quiz-setup").hidden = true;
+    $("#quiz-play").hidden = false;
+    quizRender();
+  }));
+  function quizRender() {
+    Quiz.answered = false;
+    const [point, q] = Quiz.deck[Quiz.i];
+    $("#quiz-point").textContent = point;
+    $("#quiz-counter").textContent = Quiz.i + 1 + " / " + Quiz.deck.length;
+    $("#quiz-progress").style.width = (Quiz.i / Quiz.deck.length) * 100 + "%";
+    $("#quiz-feedback").className = "feedback"; $("#quiz-feedback").innerHTML = "";
+    $("#quiz-next").hidden = true;
+    const opts = shuffle([{ text: q, ok: true }, ...makeDistractors(point, q)]);
+    const box = $("#quiz-options");
+    box.innerHTML = "";
+    opts.forEach((o, k) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "quiz-opt";
+      b.innerHTML = '<span class="letter">' + "ABCD"[k] + "</span><span>" + esc(o.text) + "</span>";
+      b.addEventListener("click", () => quizAnswer(b, o));
+      b._opt = o;
+      box.appendChild(b);
+    });
+  }
+  function quizAnswer(btn, o) {
+    if (Quiz.answered) return;
+    Quiz.answered = true;
+    const fb = $("#quiz-feedback");
+    $$(".quiz-opt").forEach(b => {
+      b.disabled = true;
+      if (b._opt.ok) b.classList.add("correct");
+    });
+    if (o.ok) {
+      Quiz.score++;
+      const praise = ["Brilliant! ✨", "Perfect! 💜", "Great job! 🦋", "Excellent! 🌟"];
+      fb.className = "feedback ok"; fb.textContent = praise[Math.floor(Math.random() * praise.length)];
+    } else {
+      btn.classList.add("wrong");
+      btn.insertAdjacentHTML("beforeend", '<span class="tag">ошибка</span>');
+      fb.className = "feedback bad";
+      fb.innerHTML = "Неверно 🙈<span class=\"why\">" + esc(o.why) + "</span>";
+    }
+    $("#quiz-next").hidden = false;
+    $("#quiz-next").focus();
+  }
+  $("#quiz-next").addEventListener("click", () => {
+    Quiz.i++;
+    if (Quiz.i < Quiz.deck.length) quizRender();
+    else {
+      $("#quiz-progress").style.width = "100%";
+      showEnd("Квиз пройден! 🎉", "Правильных ответов: <b>" + Quiz.score + " из " + Quiz.deck.length + "</b>", () => go("quiz"));
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (!$("#screen-quiz").classList.contains("active") || $("#quiz-play").hidden) return;
+    const k = "1234".indexOf(e.key);
+    if (k >= 0 && !Quiz.answered) { const b = $$(".quiz-opt")[k]; if (b) b.click(); }
+  });
+
+  /* ======================================================
      4. FIGHT — дуэль по PIN
      Соединение: PeerJS (WebRTC, бесплатный публичный сервер).
      Для локальной проверки в двух вкладках: ?local=1 (BroadcastChannel).
@@ -738,7 +903,7 @@
   // прямые ссылки: index.html#flash, #mix, #test, #fight
   function fromHash() {
     const h = location.hash.replace("#", "");
-    if (["home", "flash", "mix", "test", "fight"].includes(h)) go(h);
+    if (["home", "flash", "quiz", "mix", "test", "fight"].includes(h)) go(h);
   }
   window.addEventListener("hashchange", fromHash);
   fromHash();

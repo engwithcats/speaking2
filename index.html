@@ -9,13 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=202611171253">
+  <link rel="stylesheet" href="css/style.css?v=202611171312">
 </head>
 <body>
-  <div class="sky" aria-hidden="true">
-    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
-    <div class="sparkles" id="sparkles"></div>
-  </div>
 
   <header class="site-header">
     <div class="site-header-inner">
@@ -47,48 +43,97 @@
         <img class="banner-mascot" src="assets/mascot.webp" alt="Кошечка-фея — маскот тренажера">
       </div>
 
-      <div class="bubble">
-        <p>Привет! <b>Английский и котики</b> сделали этот тренажер, чтобы ты смогла легко подготовиться к говорению и набрать <span class="score-badge">4/4</span></p>
+      <div class="intro-grid">
+        <div class="intro-text">
+          <div class="bubble">
+            <p>Привет! <b>Английский и котики</b> сделали этот тренажер, чтобы ты смогла легко подготовиться к говорению и набрать <span class="score-badge">4/4</span></p>
+          </div>
+          <div class="task-card">
+            <div class="task-label">Задание</div>
+            <p class="task">You are considering visiting <b>Fairytopia</b> and now you’d like to get more information.</p>
+            <p class="task-ru">Выбери режим и научись задавать вопросы к любому объявлению.</p>
+          </div>
+        </div>
+        <figure class="ad-card">
+          <div class="ad-badge">Advertisement</div>
+          <img src="assets/fairytopia.jpg" alt="Фейритопия: феи летят над цветочной долиной">
+          <figcaption>
+            <b>Visit Fairytopia!</b> Magic flowers, flying lessons &amp; rainbow pollen for everyone.
+          </figcaption>
+        </figure>
       </div>
-
-      <div class="task-card">
-        <div class="task-label">Задание</div>
-        <p class="task">You are considering visiting <b>Fairytopia</b> and now you’d like to get more information.</p>
-        <p class="task-ru">Выбери режим и научись задавать вопросы к любому объявлению.</p>
-      </div>
-
-      <figure class="ad-card pearl">
-        <div class="ad-badge">Advertisement</div>
-        <img src="assets/fairytopia.jpg" alt="Фейритопия: феи летят над цветочной долиной">
-        <figcaption>
-          <b>Visit Fairytopia!</b> Magic flowers, flying lessons & rainbow pollen for everyone.
-        </figcaption>
-      </figure>
 
       <h2 class="section-title">Выбери режим</h2>
       <div class="modes">
-        <button class="mode-card m-pink" data-go="flash">
+        <button class="mode-card" data-go="flash">
           <span class="mode-icon">🃏</span>
           <span class="mode-name">Flashcards</span>
           <span class="mode-desc">Выучи шаблоны для всех вопросов из говорения</span>
         </button>
-        <button class="mode-card m-sky" data-go="mix">
+        <button class="mode-card" data-go="quiz">
+          <span class="mode-icon">✅</span>
+          <span class="mode-name">Quiz</span>
+          <span class="mode-desc">Выбери правильный вопрос среди вариантов с ошибками</span>
+        </button>
+        <button class="mode-card" data-go="mix">
           <span class="mode-icon">🧩</span>
           <span class="mode-name">Mix &amp; Match</span>
           <span class="mode-desc">Собери вопрос из перепутанных слов</span>
         </button>
-        <button class="mode-card m-mint" data-go="test">
+        <button class="mode-card" data-go="test">
           <span class="mode-icon">🎤</span>
           <span class="mode-name">Test yourself</span>
           <span class="mode-desc">Задай вопрос устно и проверь себя</span>
         </button>
-        <button class="mode-card m-lilac" data-go="fight">
+        <button class="mode-card" data-go="fight">
           <span class="mode-icon">⚔️</span>
           <span class="mode-name">Fight</span>
           <span class="mode-desc">Дуэль с другом по PIN-коду: 30 вопросов</span>
         </button>
       </div>
-      <p class="footer-note">Материал: банк ФИПИ, Решу ЕГЭ, Speaking Book, сборник 2027 · шаблоны по конспекту «Говорение 2»</p>
+
+      <section class="cta">
+        <img class="cta-mascot" src="assets/mascot.webp" alt="">
+        <div class="cta-body">
+          <h2 class="cta-title">Хочешь сдать ЕГЭ по английскому на максимум?</h2>
+          <p>Ещё больше тренажеров, разборов и лайфхаков — в нашем Telegram-канале. А подготовиться к экзаменам вместе с нами можно на курсе «Английский и котики».</p>
+          <div class="cta-buttons">
+            <a class="btn btn-main" href="https://englishandcats.ru/polugod?utm_source=tg&amp;utm_medium=channel&amp;utm_campaign=post&amp;utm_term=aik" target="_blank" rel="noopener">Подготовка к ЕГЭ на сайте →</a>
+            <a class="btn btn-light" href="https://t.me/englishandcats" target="_blank" rel="noopener">Telegram @englishandcats</a>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ============ QUIZ ============ -->
+    <section class="screen" id="screen-quiz">
+      <div class="topbar">
+        <button class="btn-back" data-go="home">← Меню</button>
+        <div class="topbar-title">Quiz</div>
+        <div class="counter" id="quiz-counter"></div>
+      </div>
+
+      <div class="panel pearl" id="quiz-setup">
+        <img class="mascot-sm" src="assets/mascot.webp" alt="">
+        <h2>Найди правильный вопрос!</h2>
+        <p>К каждому пункту объявления — 4 варианта вопроса. Только один без ошибок: выбери его.</p>
+        <p class="muted">Сколько вопросов в раунде?</p>
+        <div class="choice-row">
+          <button class="btn btn-main" data-quiz-count="10">10</button>
+          <button class="btn btn-main" data-quiz-count="20">20</button>
+          <button class="btn btn-main" data-quiz-count="all">Все</button>
+        </div>
+      </div>
+
+      <div id="quiz-play" hidden>
+        <div class="progress"><div class="progress-fill" id="quiz-progress"></div></div>
+        <div class="mix-point"><div class="face-label">Ask about</div><div class="point" id="quiz-point"></div></div>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="feedback" id="quiz-feedback" aria-live="polite"></div>
+        <div class="controls">
+          <button class="btn btn-main" id="quiz-next" hidden>Далее →</button>
+        </div>
+      </div>
     </section>
 
     <!-- ============ FLASHCARDS ============ -->
@@ -273,8 +318,8 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/templates.js?v=202611171253"></script>
-  <script src="js/questions.js?v=202611171253"></script>
-  <script src="js/app.js?v=202611171253"></script>
+  <script src="js/templates.js?v=202611171312"></script>
+  <script src="js/questions.js?v=202611171312"></script>
+  <script src="js/app.js?v=202611171312"></script>
 </body>
 </html>
