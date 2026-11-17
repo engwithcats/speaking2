@@ -5,6 +5,34 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  // Счётчики относятся к текущему раунду и только к проверяемым ответам.
+  const Encouragement = {
+    streak: 0, mistakes: 0, timer: null,
+    hide() { clearTimeout(this.timer); $("#cat-notice").hidden = true; },
+    reset() { this.streak = 0; this.mistakes = 0; this.hide(); },
+    show(support) {
+      this.hide();
+      $("#cat-notice-image").src = support ? "assets/ошибка.PNG" : "assets/радостная.PNG";
+      $("#cat-notice-message").innerHTML = support
+        ? '<strong>Не переживай! Ты справишься.</strong><p>А с полугодовыми курсами котиков тебе будет проще</p>'
+        : '<strong>Молодец! Не останавливайся!</strong>';
+      $("#cat-notice-link").hidden = !support;
+      $("#cat-notice").hidden = false;
+      if (!support) this.timer = setTimeout(() => this.hide(), 6000);
+    },
+    answer(ok) {
+      if (ok) {
+        this.streak++;
+        if ([5, 15, 25, 50].includes(this.streak)) this.show(false);
+      } else {
+        this.streak = 0;
+        this.mistakes++;
+        if (this.mistakes === 3) this.show(true);
+      }
+    }
+  };
+  $("#cat-notice-close").addEventListener("click", () => Encouragement.hide());
+
   /* ---------- утилиты ---------- */
   function mulberry32(seed) {
     return function () {
@@ -78,6 +106,7 @@
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   }
   function go(name) {
+    Encouragement.reset();
     if (name !== "fight") Duel.leave();
     show(name);
     if (starters[name]) starters[name]();
@@ -321,7 +350,7 @@
   /* ======================================================
      2. MIX & MATCH
      ====================================================== */
-  const Mix = { deck: [], i: 0, score: 0, tries: 0, revealed: false, puzzle: null, count: 10 };
+  const Mix = { deck: [], i: 0, score: 0, tries: 0, revealed: false, puzzle: null, count: 20 };
   starters.mix = () => {
     $("#mix-setup").hidden = false;
     $("#mix-play").hidden = true;
@@ -331,6 +360,7 @@
     const c = b.dataset.mixCount;
     Mix.count = c === "all" ? window.QUESTIONS.length : +c;
     Mix.deck = shuffle(window.QUESTIONS).slice(0, Mix.count);
+    Encouragement.reset();
     Mix.i = 0; Mix.score = 0;
     $("#mix-setup").hidden = true;
     $("#mix-play").hidden = false;
@@ -359,14 +389,16 @@
     if (!p.isComplete()) { p.feedback("Используй все слова 🙂", "bad"); return; }
     Mix.tries++;
     if (p.check()) {
-      if (Mix.tries === 1) Mix.score++;
+      if (Mix.tries === 1) { Mix.score++; Encouragement.answer(true); }
       mixDone(true);
     } else {
+      if (Mix.tries === 1) Encouragement.answer(false);
       p.feedback(Mix.tries >= 2 ? "Почти! Подсказка: вопрос начинается с «" + esc(p.question.split(" ")[0]) + "»" : "Почти! Попробуй ещё раз", "bad");
     }
   });
   $("#mix-reset").addEventListener("click", () => Mix.puzzle.reset());
   $("#mix-show").addEventListener("click", () => {
+    Encouragement.streak = 0;
     Mix.puzzle.reveal();
     Mix.puzzle.feedback('Правильный вопрос:<span class="right">' + esc(Mix.puzzle.question) + "</span>", "");
     mixDone(false);
@@ -501,6 +533,7 @@
   $$("[data-quiz-count]").forEach(b => b.addEventListener("click", () => {
     const c = b.dataset.quizCount;
     Quiz.deck = shuffle(window.QUESTIONS).slice(0, c === "all" ? window.QUESTIONS.length : +c);
+    Encouragement.reset();
     Quiz.i = 0; Quiz.score = 0;
     $("#quiz-setup").hidden = true;
     $("#quiz-play").hidden = false;
@@ -530,6 +563,7 @@
   function quizAnswer(btn, o) {
     if (Quiz.answered) return;
     Quiz.answered = true;
+    Encouragement.answer(o.ok);
     const fb = $("#quiz-feedback");
     $$(".quiz-opt").forEach(b => {
       b.disabled = true;
@@ -808,6 +842,7 @@
       const rnd = mulberry32(this.seed);
       this.deck = shuffle(window.QUESTIONS, rnd).slice(0, DUEL_LEN);
       this.rnd = rnd;
+      Encouragement.reset();
       this.i = 0; this.correct = 0; this.t0 = Date.now(); this.active = true;
       $("#duel-me-name").textContent = this.me.name;
       $("#duel-op-name").textContent = this.opp.name;
@@ -830,6 +865,7 @@
       this.busy = true;
       $("#fight-check").disabled = true; $("#fight-reset").disabled = true;
       const ok = p.check();
+      Encouragement.answer(ok);
       p.lock();
       if (ok) { this.correct++; p.feedback("Correct! ✨", "ok"); }
       else p.feedback('Неверно. Правильно:<span class="right">' + esc(p.question) + "</span>", "bad");

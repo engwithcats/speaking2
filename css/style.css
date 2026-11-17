@@ -16,7 +16,7 @@
   --ok-soft: #e6f6ee;
   --bad: #d95c7c;
   --bad-soft: #fcebf0;
-  --grad: linear-gradient(135deg, #b8a9ec 0%, #8f7bd8 100%);
+  --accent-fill: #8f7bd8;
   --radius: 26px;
   --head: "Montserrat", system-ui, sans-serif;
 }
@@ -44,7 +44,7 @@ a { color: inherit; }
 .header-links { display: flex; gap: 8px; flex: none; }
 .hbtn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 99px; font-weight: 800; font-size: 15px; text-decoration: none; transition: transform .15s, box-shadow .15s, background .15s; }
 .hbtn:hover { transform: translateY(-1px); }
-.hbtn-site { background: var(--grad); color: #fff; }
+.hbtn-site { background: var(--accent-fill); color: #fff; }
 .hbtn-tg { background: var(--lilac); color: var(--violet-deep); }
 .hbtn-tg:hover { background: var(--lilac-2); }
 
@@ -93,7 +93,7 @@ a { color: inherit; }
 }
 .bubble p { position: relative; margin: 0; font-size: clamp(18px, 2.1vw, 21px); font-weight: 700; line-height: 1.45; }
 .bubble b { color: var(--violet-deep); }
-.score-badge { display: inline-block; padding: 0 12px; border-radius: 99px; background: var(--grad); color: #fff; font-weight: 800; }
+.score-badge { display: inline-block; padding: 0 12px; border-radius: 99px; background: var(--accent-fill); color: #fff; font-weight: 800; }
 
 .task-card { padding: 4px 4px 0; }
 .task-label {
@@ -150,13 +150,13 @@ a { color: inherit; }
 .btn-back:hover { background: var(--lilac); }
 .counter:empty { visibility: hidden; }
 .progress { height: 10px; border-radius: 99px; background: var(--lilac-2); overflow: hidden; margin-bottom: 18px; flex: 1; }
-.progress-fill { height: 100%; width: 0; background: var(--grad); transition: width .4s ease; border-radius: 99px; }
+.progress-fill { height: 100%; width: 0; background: var(--accent-fill); transition: width .4s ease; border-radius: 99px; }
 
 .controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px; }
 .btn { padding: 13px 24px; border-radius: 99px; border: 0; font-weight: 800; font-size: 16px; min-height: 48px; transition: transform .15s, box-shadow .15s, background .15s; }
 .btn:active { transform: scale(.97); }
 .btn:focus-visible { outline: 3px solid var(--violet-deep); outline-offset: 2px; }
-.btn-main { background: var(--grad); color: #fff; }
+.btn-main { background: var(--accent-fill); color: #fff; }
 .btn-main:hover { }
 .btn-ghost { background: var(--surface); color: var(--ink); }
 .btn-ghost:hover { background: var(--lilac); }
@@ -322,3 +322,12 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Поддержка во время игры */
+.cat-notice { position: fixed; right: 20px; bottom: 20px; z-index: 1600; width: min(340px, calc(100vw - 32px)); max-height: calc(100dvh - 100px); overflow-y: auto; padding: 20px; border: 2px solid var(--lilac-3); border-radius: 24px; background: var(--surface); box-shadow: 0 8px 32px #3b365026; text-align: center; }
+.cat-notice img { width: 120px; height: 140px; object-fit: contain; margin: 0 auto 10px; }
+.cat-notice p { line-height: 1.45; margin: 8px 0 14px; }
+.cat-notice strong { display: block; font-size: 19px; }
+.cat-notice a { display: inline-block; text-decoration: none; }
+.cat-notice-close { position: absolute; right: 8px; top: 8px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--lilac); font-size: 24px; }
+@media (max-width: 560px) { .cat-notice { right: 16px; bottom: 16px; } .cat-notice img { height: 90px; } }

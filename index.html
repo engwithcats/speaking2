@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=202611171314">
+  <link rel="stylesheet" href="css/style.css?v=20261117cats2">
 </head>
 <body>
 
   <header class="site-header">
     <div class="site-header-inner">
       <a class="brand" href="#home" data-go="home">
-        <img src="assets/mascot.webp" alt="" class="brand-logo">
+        <img src="assets/лого.png" alt="" class="brand-logo">
         <span>Тренажер от <b>Английский и котики</b></span>
       </a>
       <nav class="header-links">
@@ -119,9 +119,9 @@
         <p>К каждому пункту объявления — 4 варианта вопроса. Только один без ошибок: выбери его.</p>
         <p class="muted">Сколько вопросов в раунде?</p>
         <div class="choice-row">
-          <button class="btn btn-main" data-quiz-count="10">10</button>
           <button class="btn btn-main" data-quiz-count="20">20</button>
-          <button class="btn btn-main" data-quiz-count="all">Все</button>
+          <button class="btn btn-main" data-quiz-count="100">100</button>
+          <button class="btn btn-main" data-quiz-count="all">ВСЕ</button>
         </div>
       </div>
 
@@ -182,9 +182,9 @@
         <p>Перетаскивай кубики со словами (или просто нажимай на них), чтобы получился правильный вопрос к пункту объявления.</p>
         <p class="muted">Сколько вопросов в раунде?</p>
         <div class="choice-row">
-          <button class="btn btn-main" data-mix-count="10">10</button>
           <button class="btn btn-main" data-mix-count="20">20</button>
-          <button class="btn btn-main" data-mix-count="all">Все</button>
+          <button class="btn btn-main" data-mix-count="100">100</button>
+          <button class="btn btn-main" data-mix-count="all">ВСЕ</button>
         </div>
       </div>
 
@@ -316,10 +316,17 @@
 
   </main>
 
+  <aside class="cat-notice" id="cat-notice" hidden aria-label="Поддержка от котиков">
+    <button class="cat-notice-close" id="cat-notice-close" aria-label="Закрыть подсказку">×</button>
+    <img id="cat-notice-image" src="assets/радостная.PNG" alt="Кошечка поддерживает тебя">
+    <div id="cat-notice-message" role="status" aria-live="polite"></div>
+    <a id="cat-notice-link" class="btn btn-main" href="https://englishandcats.ru/ege2027?utm_source=tg&amp;utm_medium=channel&amp;utm_term=aik" target="_blank" rel="noopener" hidden>Узнать подробнее</a>
+  </aside>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/templates.js?v=202611171314"></script>
-  <script src="js/questions.js?v=202611171314"></script>
-  <script src="js/app.js?v=202611171314"></script>
+  <script src="js/templates.js?v=20261117cats2"></script>
+  <script src="js/questions.js?v=20261117cats2"></script>
+  <script src="js/app.js?v=20261117cats2"></script>
 </body>
 </html>
