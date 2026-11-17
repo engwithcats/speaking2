@@ -1,4 +1,6 @@
-# Fairytopia Questions ✨
+# Говорение 2 на ЕГЭ на максимум
+
+Тренажер от «Английский и котики» ([сайт](https://englishandcats.ru/polugod?utm_source=tg&utm_medium=channel&utm_campaign=post&utm_term=aik), [Telegram](https://t.me/englishandcats)).
 
 Браузерная игра для подготовки к ЕГЭ по английскому (говорение, Task 2): ученики учатся задавать вопросы к пунктам объявления.
 

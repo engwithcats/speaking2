@@ -58,6 +58,7 @@
   /* ---------- блёстки на фоне ---------- */
   (function makeSparkles() {
     const box = $("#sparkles");
+    if (!box) return;
     for (let i = 0; i < 26; i++) {
       const s = document.createElement("div");
       s.className = "sparkle" + (i % 3 === 0 ? " gold" : "");
